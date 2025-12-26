@@ -97,7 +97,7 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 || duration <= 0 || weight <= 0 || height <= 0 {
-		return 0, fmt.Errorf("%s", ErrWrongInputData)
+		return 0, ErrWrongInputData
 	}
 
 	speed := meanSpeed(steps, height, duration)
@@ -107,7 +107,7 @@ func RunningSpentCalories(steps int, weight, height float64, duration time.Durat
 
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 || duration <= 0 || weight <= 0 || height <= 0 {
-		return 0, fmt.Errorf("%s", ErrWrongInputData)
+		return 0, ErrWrongInputData
 	}
 
 	speed := meanSpeed(steps, height, duration)
