@@ -20,7 +20,7 @@ const (
 func parsePackage(data string) (int, time.Duration, error) {
 	dataSplitted := strings.Split(data, ",")
 	if len(dataSplitted) != 2 {
-		return 0, 0, fmt.Errorf("%s", spentcalories.ErrWrongInputData)
+		return 0, 0, spentcalories.ErrWrongInputData
 	}
 
 	steps, err := strconv.Atoi(dataSplitted[0])
@@ -34,7 +34,7 @@ func parsePackage(data string) (int, time.Duration, error) {
 	}
 
 	if steps <= 0 || duration <= 0 {
-		return 0, 0, fmt.Errorf("%s", spentcalories.ErrWrongInputData)
+		return 0, 0, spentcalories.ErrWrongInputData
 	}
 
 	return steps, duration, nil

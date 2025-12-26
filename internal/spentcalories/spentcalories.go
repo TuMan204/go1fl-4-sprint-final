@@ -18,12 +18,15 @@ const (
 	walkingCaloriesCoefficient = 0.5  // коэффициент для расчета калорий при ходьбе
 )
 
-var ErrWrongInputData = errors.New("wrong input data")
+var (
+	ErrWrongInputData    = errors.New("wrong input data")
+	ErrWrongTrainingType = errors.New("неизвестный тип тренировки")
+)
 
 func parseTraining(data string) (int, string, time.Duration, error) {
 	dataSplitted := strings.Split(data, ",")
 	if len(dataSplitted) != 3 {
-		return 0, "", 0, fmt.Errorf("%s", ErrWrongInputData)
+		return 0, "", 0, ErrWrongInputData
 	}
 
 	steps, err := strconv.Atoi(dataSplitted[0])
@@ -37,7 +40,7 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 	}
 
 	if steps <= 0 || duration <= 0 {
-		return 0, "", 0, fmt.Errorf("%s", ErrWrongInputData)
+		return 0, "", 0, ErrWrongInputData
 	}
 
 	return steps, dataSplitted[1], duration, nil
@@ -86,7 +89,7 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 			return "", err
 		}
 	default:
-		return "", fmt.Errorf("неизвестный тип тренировки")
+		return "", ErrWrongTrainingType
 	}
 
 	return fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", training, duration.Hours(), dist, speed, spentCalories), nil
