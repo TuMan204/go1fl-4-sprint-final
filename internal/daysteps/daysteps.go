@@ -17,14 +17,9 @@ const (
 )
 
 func parsePackage(data string) (int, time.Duration, error) {
-	dataTrimmed := strings.TrimSpace(data)
-	if len(dataTrimmed) == 0 {
-		return 0, 0, fmt.Errorf("empty input data")
-	}
-
-	dataSplitted := strings.Split(dataTrimmed, ",")
+	dataSplitted := strings.Split(data, ",")
 	if len(dataSplitted) != 2 {
-		return 0, 0, fmt.Errorf("wrong input data")
+		return 0, 0, fmt.Errorf("%s", spentcalories.ErrWrongInputData)
 	}
 
 	steps, err := strconv.Atoi(dataSplitted[0])
@@ -32,16 +27,20 @@ func parsePackage(data string) (int, time.Duration, error) {
 		return 0, 0, err
 	}
 
-	walkDuration, err := time.ParseDuration(dataSplitted[1])
+	duration, err := time.ParseDuration(dataSplitted[1])
 	if err != nil {
 		return 0, 0, err
 	}
 
-	return steps, walkDuration, nil
+	if steps == 0 || duration == 0 {
+		return 0, 0, fmt.Errorf("%s", spentcalories.ErrWrongInputData)
+	}
+
+	return steps, duration, nil
 }
 
 func DayActionInfo(data string, weight, height float64) string {
-	steps, walkDuration, err := parsePackage(data)
+	steps, duration, err := parsePackage(data)
 	if steps <= 0 {
 		if err != nil {
 			fmt.Println(err)
@@ -50,10 +49,10 @@ func DayActionInfo(data string, weight, height float64) string {
 	}
 
 	distance := (float64(steps) * stepLength) / mInKm
-	spentCalories, err := spentcalories.WalkingSpentCalories(steps, weight, height, walkDuration)
+	spentCalories, err := spentcalories.WalkingSpentCalories(steps, weight, height, duration)
 	if err != nil {
 		return ""
 	}
 
-	return fmt.Sprintf("Количество шагов: %d.\nДистанция составила: %.2f км.\nВы сожгли %.2f ккал.\n", steps, distance, spentCalories)
+	return fmt.Sprintf("Количество шагов: %d.\nДистанция составила %.2f км.\nВы сожгли %.2f ккал.\n", steps, distance, spentCalories)
 }

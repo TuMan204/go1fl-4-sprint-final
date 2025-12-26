@@ -1,6 +1,7 @@
 package spentcalories
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strconv"
@@ -17,15 +18,12 @@ const (
 	walkingCaloriesCoefficient = 0.5  // коэффициент для расчета калорий при ходьбе
 )
 
-func parseTraining(data string) (int, string, time.Duration, error) {
-	dataTrimmed := strings.TrimSpace(data)
-	if len(dataTrimmed) == 0 {
-		return 0, "", 0, fmt.Errorf("empty input data")
-	}
+var ErrWrongInputData = errors.New("wrong input data")
 
-	dataSplitted := strings.Split(dataTrimmed, ",")
+func parseTraining(data string) (int, string, time.Duration, error) {
+	dataSplitted := strings.Split(data, ",")
 	if len(dataSplitted) != 3 {
-		return 0, "", 0, fmt.Errorf("wrong input data")
+		return 0, "", 0, fmt.Errorf("%s", ErrWrongInputData)
 	}
 
 	steps, err := strconv.Atoi(dataSplitted[0])
@@ -33,12 +31,16 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 		return 0, "", 0, err
 	}
 
-	walkDuration, err := time.ParseDuration(dataSplitted[2])
+	duration, err := time.ParseDuration(dataSplitted[2])
 	if err != nil {
 		return 0, "", 0, err
 	}
 
-	return steps, dataSplitted[1], walkDuration, nil
+	if steps == 0 || duration == 0 {
+		return 0, "", 0, fmt.Errorf("%s", ErrWrongInputData)
+	}
+
+	return steps, dataSplitted[1], duration, nil
 }
 
 func distance(steps int, height float64) float64 {
@@ -92,7 +94,7 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 || duration <= 0 || weight <= 0 || height <= 0 {
-		return 0, fmt.Errorf("wrong input data")
+		return 0, fmt.Errorf("%s", ErrWrongInputData)
 	}
 
 	speed := meanSpeed(steps, height, duration)
@@ -102,7 +104,7 @@ func RunningSpentCalories(steps int, weight, height float64, duration time.Durat
 
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 || duration <= 0 || weight <= 0 || height <= 0 {
-		return 0, fmt.Errorf("wrong input data")
+		return 0, fmt.Errorf("%s", ErrWrongInputData)
 	}
 
 	speed := meanSpeed(steps, height, duration)
