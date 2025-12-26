@@ -83,6 +83,8 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 		if err != nil {
 			return "", err
 		}
+	default:
+		return "", fmt.Errorf("неизвестный тип тренировки")
 	}
 
 	return fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", training, duration.Hours(), dist, speed, spentCalories), nil
