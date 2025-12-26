@@ -36,7 +36,7 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 		return 0, "", 0, err
 	}
 
-	if steps == 0 || duration == 0 {
+	if steps <= 0 || duration <= 0 {
 		return 0, "", 0, fmt.Errorf("%s", ErrWrongInputData)
 	}
 
