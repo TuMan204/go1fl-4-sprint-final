@@ -34,7 +34,7 @@ func parsePackage(data string) (int, time.Duration, error) {
 	}
 
 	if steps <= 0 || duration <= 0 {
-		return 0, 0, spentcalories.ErrWrongInputData
+		return 0, 0, spentcalories.ErrValLessOrEqualZero
 	}
 
 	return steps, duration, nil

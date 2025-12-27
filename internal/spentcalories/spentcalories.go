@@ -19,8 +19,9 @@ const (
 )
 
 var (
-	ErrWrongInputData    = errors.New("wrong input data")
-	ErrWrongTrainingType = errors.New("неизвестный тип тренировки")
+	ErrWrongInputData     = errors.New("wrong input data")
+	ErrValLessOrEqualZero = errors.New("the value is less than or equal to zero")
+	ErrWrongTrainingType  = errors.New("неизвестный тип тренировки")
 )
 
 func parseTraining(data string) (int, string, time.Duration, error) {
@@ -40,7 +41,7 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 	}
 
 	if steps <= 0 || duration <= 0 {
-		return 0, "", 0, ErrWrongInputData
+		return 0, "", 0, ErrValLessOrEqualZero
 	}
 
 	return steps, dataSplitted[1], duration, nil
@@ -97,7 +98,7 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 || duration <= 0 || weight <= 0 || height <= 0 {
-		return 0, ErrWrongInputData
+		return 0, ErrValLessOrEqualZero
 	}
 
 	speed := meanSpeed(steps, height, duration)
@@ -107,7 +108,7 @@ func RunningSpentCalories(steps int, weight, height float64, duration time.Durat
 
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 || duration <= 0 || weight <= 0 || height <= 0 {
-		return 0, ErrWrongInputData
+		return 0, ErrValLessOrEqualZero
 	}
 
 	speed := meanSpeed(steps, height, duration)
